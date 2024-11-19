@@ -1,12 +1,11 @@
-#include <iostream>
-#include <stdlib.h>
+/*#include <Streaming.h>
 #include <vector>
 #include "Renderer.h"
 #include "MyMath.h"
 
 using namespace std;
 
-const char symb[6] = { ' ', '.', ':' , ';' , '+' , '#' }; //console gradient for overlapping objects
+//const char symb[6] = { ' ', '.', ':' , ';' , '+' , '#' }; //console gradient for overlapping objects
 
 const float symbH = 1, symbW = 1; //console symbol pixel size
 const float symbMod = symbH / symbW;
@@ -37,8 +36,8 @@ void DrawFrame() //uses the int frame array to pick characters from the symb gra
 	}
 	curline[(frameW + 2) * frameH + frameW] = '+';
 	curline[(frameW + 2) * frameH + frameW + 1] = 0;
-	system("cls");
-	cout << curline;
+	//system("cls");
+	//cout << curline;
 }
 
 void MakeFrame() //runs through the matrix of y rows and x cols, checking if any of the objects should be displayed at the given coordinates. Uses an increment to determine how many objects overlap at a single coordinate
@@ -90,4 +89,4 @@ void RemoveBall(int index) //removes a Ball pointer from the array of balls on t
 	Ball* ball = balls[index];
 	balls.erase(balls.begin() + index);
 	delete ball;
-}
+}*/

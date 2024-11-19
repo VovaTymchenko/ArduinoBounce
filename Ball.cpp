@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <Streaming.h>
 #include "Ball.h"
 
 Ball::Ball()
@@ -84,4 +84,4 @@ void Ball::Bounce(std::vector<Circle*> circles, std::vector<Ball*> balls, int i,
 void Ball::Split() //TBD
 {
 	//sounds fun, but i gotta do the main batch first
-}
+}*/

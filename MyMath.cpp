@@ -1,4 +1,4 @@
-#include <iostream>
+#include <Streaming.h>
 #include "MyMath.h"
 
 vector2d::vector2d()
