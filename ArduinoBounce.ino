@@ -1,11 +1,15 @@
 #include <Streaming.h>
 #include <Servo.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 #include "MyMath.h"
 #include "Circle.h"
 //#include "Ball.h"
 //#include "Renderer.h"
 
 Servo servo;
+Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64, &WIRE);
 
 /*void ServoSpin(int startAngle, int endAngle, int direction) //spinDirection should be 1 or -1
 {
@@ -30,6 +34,11 @@ void setup()
 
 void loop()
 {
+
+  MakeFrame();
+  DrawFrame(display)
+  display.display();
+
   //if (digitalRead(D4) == 0)
   {
     //button = abs(button - 1);
