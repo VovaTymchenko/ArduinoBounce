@@ -1,6 +1,5 @@
 #include <Streaming.h>
 #include <Servo.h>
-#include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "MyMath.h"
@@ -8,8 +7,8 @@
 //#include "Ball.h"
 #include "Renderer.h"
 
-Servo servo;
-Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64, &Wire);
+//Servo servo;
+Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64);
 
 /*void ServoSpin(int startAngle, int endAngle, int direction) //spinDirection should be 1 or -1
 {
@@ -23,6 +22,7 @@ void setup()
 {
   
   Serial.begin(115200);
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   Serial << endl << "Hello World!" << endl;
   //servo.attach(D3, 500, 2400);
   //pinMode(D4, INPUT_PULLUP);
@@ -35,8 +35,9 @@ void setup()
 void loop()
 {
   MakeFrame(display);
-  //DrawFrame(display)
+  //DrawFrame(display);
   display.display();
+  display.clearDisplay();
 
   //if (digitalRead(D4) == 0)
   {

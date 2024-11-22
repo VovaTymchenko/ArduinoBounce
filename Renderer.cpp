@@ -46,22 +46,22 @@ void MakeFrame(Adafruit_SSD1306 display) //runs through the matrix of y rows and
 	}*/
 }
 
-/*void AddCircle(Circle* pCircle) //adds pointer to a new Circle() object to the array of of circles on the scene
+void AddCircle(Circle* pCircle) //adds pointer to a new Circle() object to the array of of circles on the scene
 {
 	circles.push_back(pCircle);
 }
 
-void AddBall(Ball* pBall) //adds pointer to a new Ball() object to the array of balls on the scene
+/*void AddBall(Ball* pBall) //adds pointer to a new Ball() object to the array of balls on the scene
 {
 	balls.push_back(pBall);
-}
+}*/
 
 void RemoveCircle(int index) //removes a Circle pointer from the array of circles on the scene and reallocates memory
 { 
 	Circle* circle = circles[index];
 	circles.erase(circles.begin() + index);
 	delete circle;
-}*/
+}
 
 /*void RemoveBall(int index) //removes a Ball pointer from the array of balls on the scene and reallocates memory
 { 
