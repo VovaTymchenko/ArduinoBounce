@@ -10,6 +10,8 @@
 //Servo servo;
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64);
 
+Circle* circle1 = new Circle();
+
 /*void ServoSpin(int startAngle, int endAngle, int direction) //spinDirection should be 1 or -1
 {
   servo.write(startAngle);
@@ -27,7 +29,7 @@ void setup()
   //servo.attach(D3, 500, 2400);
   //pinMode(D4, INPUT_PULLUP);
 
-  
+  AddCircle(circle1);
 }
 
 //int button = 0;

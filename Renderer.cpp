@@ -19,7 +19,7 @@ std::vector<Circle*> circles; //array of the objects to be displayed
 	}
 }*/
 
-void MakeFrame(Adafruit_SSD1306 display) //runs through the matrix of y rows and x cols, checking if any of the objects should be displayed at the given coordinates. Uses an increment to determine how many objects overlap at a single coordinate
+void MakeFrame(Adafruit_SSD1306 &display) //runs through the matrix of y rows and x cols, checking if any of the objects should be displayed at the given coordinates. Uses an increment to determine how many objects overlap at a single coordinate
 {
 	for (int i = 1; i < frameH; i++)
 	{
