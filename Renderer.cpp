@@ -6,7 +6,7 @@ const int frameH = 64, frameW = 128; //draw surface dimensions - 1
 //int frame[frameH + 1][frameW + 1]; //frame "pixel" data
 
 std::vector<Circle*> circles; //array of the objects to be displayed
-//std::vector<Ball*> balls; //array of the objects to be displayed
+std::vector<Ball*> balls; //array of the objects to be displayed
 
 /*void DrawFrame(Adafruit_SSD1306 display) //uses the int frame array to pick characters from the symb gradient depending on the number of overlapping objects, then prints the character in console
 {
@@ -32,18 +32,18 @@ void MakeFrame(Adafruit_SSD1306 &display) //runs through the matrix of y rows an
 				if (abs(distance - circles[k]->r) <= circles[k]->thickness) display.drawPixel(i, j, SSD1306_WHITE);
 			}
 
-			/*for (int k = 0; k < balls.size(); k++) //balls
+			for (int k = 0; k < balls.size(); k++) //balls
 			{
 				float distance = FindLength(balls[k]->cx, balls[k]->cy, j, i);
-				if (abs(distance - balls[k]->r) <= balls[k]->thickness) frame[i][j] = frame[i][j] + 1; //radius is supposed to always be 0, but ill leave it in the formula just in case
-			}*/
+				if (abs(distance - balls[k]->r) <= balls[k]->thickness) display.drawPixel(i, j, SSD1306_WHITE); //radius is supposed to always be 0, but ill leave it in the formula just in case
+			}
 		}
 	}
-	/*for (int i = 0; i < balls.size(); i++)
+	for (int i = 0; i < balls.size(); i++)
 	{
 		balls[i]->Move();
-		balls[i]->Bounce(circles, balls, i, symbMod, frameH, frameW);
-	}*/
+		balls[i]->Bounce(circles, balls, i, frameH, frameW);
+	}
 }
 
 void AddCircle(Circle* pCircle) //adds pointer to a new Circle() object to the array of of circles on the scene
@@ -51,10 +51,10 @@ void AddCircle(Circle* pCircle) //adds pointer to a new Circle() object to the a
 	circles.push_back(pCircle);
 }
 
-/*void AddBall(Ball* pBall) //adds pointer to a new Ball() object to the array of balls on the scene
+void AddBall(Ball* pBall) //adds pointer to a new Ball() object to the array of balls on the scene
 {
 	balls.push_back(pBall);
-}*/
+}
 
 void RemoveCircle(int index) //removes a Circle pointer from the array of circles on the scene and reallocates memory
 { 
@@ -63,9 +63,9 @@ void RemoveCircle(int index) //removes a Circle pointer from the array of circle
 	delete circle;
 }
 
-/*void RemoveBall(int index) //removes a Ball pointer from the array of balls on the scene and reallocates memory
+void RemoveBall(int index) //removes a Ball pointer from the array of balls on the scene and reallocates memory
 { 
 	Ball* ball = balls[index];
 	balls.erase(balls.begin() + index);
 	delete ball;
-}*/
+}

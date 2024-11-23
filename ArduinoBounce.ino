@@ -4,13 +4,14 @@
 #include <Adafruit_SSD1306.h>
 #include "MyMath.h"
 #include "Circle.h"
-//#include "Ball.h"
+#include "Ball.h"
 #include "Renderer.h"
 
 //Servo servo;
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64);
 
 Circle* circle1 = new Circle();
+Ball* ball2 = new Ball();
 
 /*void ServoSpin(int startAngle, int endAngle, int direction) //spinDirection should be 1 or -1
 {
@@ -30,6 +31,7 @@ void setup()
   //pinMode(D4, INPUT_PULLUP);
 
   AddCircle(circle1);
+  AddBall(ball2);
 }
 
 //int button = 0;

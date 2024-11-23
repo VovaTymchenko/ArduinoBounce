@@ -2,12 +2,12 @@
 
 Ball::Ball()
 {
-	cx = 0;
-	cy = 0;
+	cx = 4;
+	cy = 4;
 	r = 0;
 	thickness = 4;
-	spdX = 0;
-	spdY = 0;
+	spdX = 1;
+	spdY = 1;
 }
 
 Ball::Ball(float cx, float cy, float thickness, float spdX, float spdY)
@@ -26,10 +26,10 @@ void Ball::Move() //change coordinates based on the ball speed
 	cy += spdY;
 }
 
-void Ball::Bounce(std::vector<Circle*> circles, std::vector<Ball*> balls, int i, float symbMod, const int frameH, const int frameW) //handling collisions
+void Ball::Bounce(std::vector<Circle*> circles, std::vector<Ball*> balls, int i, const int frameH, const int frameW) //handling collisions
 {
 	if (balls[i]->cx - balls[i]->r - balls[i]->thickness <= 0 || balls[i]->cx + balls[i]->r + balls[i]->thickness >= frameW) balls[i]->spdX = -spdX;
-	if (balls[i]->cy - balls[i]->r - balls[i]->thickness <= 0 || balls[i]->cy + balls[i]->r + balls[i]->thickness >= frameH * symbMod) balls[i]->spdY = -spdY;
+	if (balls[i]->cy - balls[i]->r - balls[i]->thickness <= 0 || balls[i]->cy + balls[i]->r + balls[i]->thickness >= frameH) balls[i]->spdY = -spdY;
 
 	for (int k = 0; k < circles.size(); k++) //checking collision with circles
 	{
