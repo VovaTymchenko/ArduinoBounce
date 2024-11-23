@@ -11,7 +11,7 @@
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64);
 
 Circle* circle1 = new Circle();
-Ball* ball2 = new Ball();
+Ball* ball2 = new Ball(5, 5, 6, 2.1, 5.3);
 
 /*void ServoSpin(int startAngle, int endAngle, int direction) //spinDirection should be 1 or -1
 {
