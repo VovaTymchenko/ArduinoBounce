@@ -29,13 +29,13 @@ void MakeFrame(Adafruit_SSD1306 &display) //runs through the matrix of y rows an
 			for (int k = 0; k < circles.size(); k++) //circles
 			{
 				float distance = FindLength(circles[k]->cx, circles[k]->cy, j, i);
-				if (abs(distance - circles[k]->r) <= circles[k]->thickness) display.drawPixel(i, j, SSD1306_WHITE);
+				if (abs(distance - circles[k]->r) <= circles[k]->thickness) display.drawPixel(j, i, SSD1306_WHITE);
 			}
 
 			for (int k = 0; k < balls.size(); k++) //balls
 			{
 				float distance = FindLength(balls[k]->cx, balls[k]->cy, j, i);
-				if (abs(distance - balls[k]->r) <= balls[k]->thickness) display.drawPixel(i, j, SSD1306_WHITE); //radius is supposed to always be 0, but ill leave it in the formula just in case
+				if (abs(distance - balls[k]->r) <= balls[k]->thickness) display.drawPixel(j, i, SSD1306_WHITE); //radius is supposed to always be 0, but ill leave it in the formula just in case
 			}
 		}
 	}

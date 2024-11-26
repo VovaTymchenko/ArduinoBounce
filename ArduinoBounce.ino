@@ -7,51 +7,53 @@
 #include "Ball.h"
 #include "Renderer.h"
 
-//Servo servo;
+Servo servo;
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64);
 
-Circle* circle1 = new Circle();
 Ball* ball2 = new Ball(5, 5, 6, 2.1, 5.3);
 
-/*void ServoSpin(int startAngle, int endAngle, int direction) //spinDirection should be 1 or -1
+Ball* ball3 = new Ball(15, 5, 14, 2.1, 6.3);
+
+void setup()
+{
+  Serial.begin(115200);
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  Serial << endl << "Hello World!" << endl;
+  servo.attach(D3, 500, 2400);
+  pinMode(D4, INPUT_PULLUP);
+
+  AddBall(ball2);
+  AddBall(ball3);
+}
+
+int button = 0;
+
+void loop()
+{
+  if (button != 0)
+  {
+    MakeFrame(display);
+    display.display();
+    display.clearDisplay();
+  }
+
+  if (digitalRead(D4) == 0)
+  {
+    Serial << "boo";
+    button = abs(button - 1);
+    if (button) ServoSpin(180, 0, -1);
+    else ServoSpin(0, 180, 1);
+  }
+}
+
+void ServoSpin(int startAngle, int endAngle, int direction) //spinDirection should be 1 or -1
 {
   servo.write(startAngle);
   delay(500);
   for (int i = startAngle; i * direction <= endAngle; i += direction) servo.write(i);
   delay(500);
-}*/
-
-void setup()
-{
-  
-  Serial.begin(115200);
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  Serial << endl << "Hello World!" << endl;
-  //servo.attach(D3, 500, 2400);
-  //pinMode(D4, INPUT_PULLUP);
-
-  AddCircle(circle1);
-  AddBall(ball2);
 }
-
-//int button = 0;
-
-void loop()
-{
-  MakeFrame(display);
-  //DrawFrame(display);
-  display.display();
-  display.clearDisplay();
-
-  //if (digitalRead(D4) == 0)
-  {
-    //button = abs(button - 1);
-    //if (button) ServoSpin(180, 0, -1);
-    //else ServoSpin(0, 180, 1);
-  }
-}
-
-
 
 
 
