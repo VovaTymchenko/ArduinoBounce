@@ -33,6 +33,7 @@ void setup()
   //expansion board
   tm.displayBegin(); 
   tm.displayText("00000000");
+  tm.displayText("helowrld");
 
   //servo
   servo.attach(D3, 500, 2400);
@@ -50,7 +51,8 @@ void loop()
 {
   tmButtons = tm.readButtons(); // read which buttons are pressed
   tm.displayIntNum(tmButtons);
-  /*
+  tm.setLED(0, 1);
+  
   if (pauseButton != 0)
   {
     MakeFrame(display);
@@ -60,18 +62,19 @@ void loop()
 
   if (digitalRead(D4) == 0)
   {
-    tone(D8, 466.16, 1000);
+    tone(D8, 466.16, 100);
     pauseButton = abs(pauseButton - 1);
-    if (pauseButton) ServoSpin(180, 0, -1);
-    else ServoSpin(0, 180, 1);
-  }*/
+    if (pauseButton) ServoSpin(180, 0, -1, 3);
+    else ServoSpin(0, 180, 1, 3);
+    tone(D8, 466.16, 100);
+  }
 }
 
-void ServoSpin(int startAngle, int endAngle, int direction) //spinDirection should be 1 or -1
+void ServoSpin(int startAngle, int endAngle, int direction, int speed) //spinDirection should be 1 or -1
 {
   servo.write(startAngle);
   delay(500);
-  for (int i = startAngle; i * direction <= endAngle; i += direction) servo.write(i);
+  for (int i = startAngle; i * direction <= endAngle; i += direction * speed) servo.write(i);
   delay(500);
 }
 
