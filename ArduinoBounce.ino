@@ -21,13 +21,12 @@ int pauseButton = 0; //button
 
 
 
-int actionIndex = -1, input = 0; //used to handle different actions, such as "add circle", "remove ball", "move circle"...
+//used to handle different actions, such as "add circle", "remove ball"...
+int actionIndex = -1, input = 0;
+Circle* pNewCircle; //stores a pointer to a newly created object to manipulate its values
+Ball* pNewBall; //stores a pointer to a newly created object to manipulate its values
 
-int circleCount = 2, ballCount = 2;
-Circle* circle1 = new Circle();
-Circle* circle2 = new Circle(80, 0, 20, 2);
-Ball* ball1 = new Ball(15, 15, 6, 2.1, 5.3);
-Ball* ball2 = new Ball(105, 45, 14, 2.1, 6.3);
+int circleCount = 0, ballCount = 0;
 
 void setup()
 {
@@ -50,10 +49,6 @@ void setup()
 
 
   Serial << endl << "Hello World!" << endl;
-  AddCircle(circle1);
-  AddCircle(circle2);
-  AddBall(ball1);
-  AddBall(ball2);
 }
 
 void loop()
@@ -95,7 +90,7 @@ void loop()
       {
         input--;
         tm.displayIntNum(input);
-        delay(50);
+        delay(200);
       }
     }
 
@@ -106,7 +101,7 @@ void loop()
       {
         input++;
         tm.displayIntNum(input);
-        delay(50);
+        delay(200);
       }
     }
 
@@ -122,9 +117,21 @@ void loop()
   else if (actionIndex == -1) { tm.reset(); }
   else { tm.displayIntNum(input); }
   
+  //this part looks quite ugly, but i don't think there are any good solutions for a project of such scale
+  //created object manipulation
+  //circle
+  if (actionIndex == 111) pNewCircle->cx = input;
+  if (actionIndex == 112) pNewCircle->cy = input;
+  if (actionIndex == 113) pNewCircle->r = input;
+  if (actionIndex == 114) pNewCircle->thickness = input;
+  //ball
+  if (actionIndex == 121) pNewBall->cx = input;
+  if (actionIndex == 122) pNewBall->cy = input;
+  if (actionIndex == 123) pNewBall->thickness = input;
+  if (actionIndex == 124) pNewBall->spdX = input;
+  if (actionIndex == 125) pNewBall->spdY = input;
 
-
-  if (actionIndex == 11 || actionIndex == 21) MakeFrame(display, pauseButton, input);
+  if (actionIndex == 21) MakeFrame(display, pauseButton, input);
   else MakeFrame(display, pauseButton, -1);
   display.display();
   display.clearDisplay();
@@ -132,13 +139,33 @@ void loop()
 
 void ActionHandler()
 {
-  if (actionIndex == 1)
+  if (actionIndex == 1) //add object
   {
     actionIndex = 11;
     return;
   }
+  if (actionIndex == 11)
+  {
+    if (input == 0) return;
+    if (input == 1) { actionIndex = 111; pNewCircle = new Circle(); AddCircle(pNewCircle); circleCount++; } //adding circle
+    if (input == 2) { actionIndex = 121; pNewBall = new Ball(); AddBall(pNewBall); ballCount++; } //adding ball
+    return;
+  }
+  //circle branch
+  if (actionIndex == 111) { actionIndex = 112; input = 0; return; } //cx
+  if (actionIndex == 112) { actionIndex = 113; input = 0; return; } //cy
+  if (actionIndex == 113) { actionIndex = 114; input = 0; return; } //r
+  if (actionIndex == 114) { actionIndex = -1; } //thickness
+  //ball branch
+  if (actionIndex == 121) { actionIndex = 122; input = 0; return; } //cx
+  if (actionIndex == 122) { actionIndex = 123; input = 0; return; } //cy
+  if (actionIndex == 123) { actionIndex = 124; input = 0; return; } //thickness
+  if (actionIndex == 124) { actionIndex = 125; input = 0; return; } //spdX
+  if (actionIndex == 125) { actionIndex = -1; } //spdY
 
-  if (actionIndex == 2)
+
+
+  if (actionIndex == 2) //remove object
   {
     actionIndex = 21;
     return;
@@ -146,12 +173,11 @@ void ActionHandler()
   if (actionIndex == 21)
   {
     if (input < 0 || input > (circleCount + ballCount)) return;
-    if (input <= circleCount) RemoveCircle(input);
-    else RemoveBall(input - circleCount);
+    if (input <= circleCount) { RemoveCircle(input); circleCount--; }
+    else { RemoveBall(input - circleCount); ballCount--;}
     actionIndex = -1;
   }
 
-  //actionIndex = -1;
   input = 0;
 }
 
