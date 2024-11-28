@@ -8,15 +8,18 @@
 #include "Ball.h"
 #include "Renderer.h"
 
+//HARDWARE
+
 Servo servo; //servo
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64); //display
 
-//expansion board
-TM1638plus tm(D5, D6 , D7, false);
+TM1638plus tm(D5, D6 , D7, false);//expansion board
 byte tmButtons;
 
 int pauseButton = 0; //button
+
+
 
 Ball* ball2 = new Ball(5, 5, 6, 2.1, 5.3);
 Ball* ball3 = new Ball(15, 5, 14, 2.1, 6.3);
@@ -33,7 +36,6 @@ void setup()
   //expansion board
   tm.displayBegin(); 
   tm.displayText("00000000");
-  tm.displayText("helowrld");
 
   //servo
   servo.attach(D3, 500, 2400);
@@ -49,17 +51,6 @@ void setup()
 
 void loop()
 {
-  tmButtons = tm.readButtons(); // read which buttons are pressed
-  tm.displayIntNum(tmButtons);
-  tm.setLED(0, 1);
-  
-  if (pauseButton != 0)
-  {
-    MakeFrame(display);
-    display.display();
-    display.clearDisplay();
-  }
-
   if (digitalRead(D4) == 0)
   {
     tone(D8, 466.16, 100);
@@ -68,11 +59,19 @@ void loop()
     else ServoSpin(0, 180, 1, 3);
     tone(D8, 466.16, 100);
   }
+
+  tmButtons = tm.readButtons(); // read which buttons are pressed
+  tm.displayIntNum(tmButtons);
+  tm.setLED(0, 1);
+  
+  MakeFrame(display, pauseButton, tmButtons - 1);
+  display.display();
+  display.clearDisplay();
 }
 
 void ServoSpin(int startAngle, int endAngle, int direction, int speed) //spinDirection should be 1 or -1
 {
-  servo.write(startAngle);
+  servo.write(startAngle); 
   delay(500);
   for (int i = startAngle; i * direction <= endAngle; i += direction * speed) servo.write(i);
   delay(500);
