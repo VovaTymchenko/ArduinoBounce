@@ -22,7 +22,8 @@ int pauseButton = 0; //button
 
 
 //used to handle different actions, such as "add circle", "remove ball"...
-int actionIndex = -1, input = 0;
+int actionIndex = -1, input = 0, potFlr = 0, potCel = 64;
+bool potentiometer = false;
 Circle* pNewCircle; //stores a pointer to a newly created object to manipulate its values
 Ball* pNewBall; //stores a pointer to a newly created object to manipulate its values
 
@@ -62,12 +63,12 @@ void loop()
     tone(D8, 466.16, 100);
   }
 
-  tmButtons = tm.readButtons(); // read which buttons are pressed
+  tmButtons = tm.readButtons(); //read which buttons are pressed
   if (pauseButton == 0 && tmButtons != 0)
   {
     tm.displayText("        ");
 
-    if  (tmButtons == 1) // add object to the scene
+    if  (tmButtons == 1) //add object to the scene
     {
       tm.reset();
       tm.displayText("add");
@@ -75,12 +76,17 @@ void loop()
       actionIndex = 1;
     }
 
-    if  (tmButtons == 2) // remove object from the scene
+    if  (tmButtons == 2) //remove object from the scene
     {
       tm.reset();
       tm.displayText("remove");
       tm.setLED(1, 1);
       actionIndex = 2;
+    }
+
+    if  (tmButtons == 16 && actionIndex != -1) //potentiometer switch
+    {
+      potentiometer = !potentiometer;
     }
 
     if  (tmButtons == 32 && actionIndex != -1) // - button
@@ -105,7 +111,7 @@ void loop()
       }
     }
 
-    if  (tmButtons == 128) // apply button
+    if  (tmButtons == 128) //apply button
     {
       tm.displayText("apply");
       delay(500);
@@ -120,16 +126,18 @@ void loop()
   //this part looks quite ugly, but i don't think there are any good solutions for a project of such scale
   //created object manipulation
   //circle
-  if (actionIndex == 111) pNewCircle->cx = input;
-  if (actionIndex == 112) pNewCircle->cy = input;
-  if (actionIndex == 113) pNewCircle->r = input;
-  if (actionIndex == 114) pNewCircle->thickness = input;
+  if (actionIndex == 111) { pNewCircle->cx = input; potFlr = -32; potCel = 160; }
+  if (actionIndex == 112) { pNewCircle->cy = input; potFlr = -32; potCel = 96; }
+  if (actionIndex == 113) { pNewCircle->r = input; potFlr = 1; potCel = 64; }
+  if (actionIndex == 114) { pNewCircle->thickness = input; potFlr = 1; potCel = 16; }
   //ball
-  if (actionIndex == 121) pNewBall->cx = input;
-  if (actionIndex == 122) pNewBall->cy = input;
-  if (actionIndex == 123) pNewBall->thickness = input;
-  if (actionIndex == 124) pNewBall->spdX = input;
-  if (actionIndex == 125) pNewBall->spdY = input;
+  if (actionIndex == 121) { pNewBall->cx = input; potFlr = 0; potCel = 128; }
+  if (actionIndex == 122) { pNewBall->cy = input; potFlr = 0; potCel = 64; }
+  if (actionIndex == 123) { pNewBall->thickness = input; potFlr = 1; potCel = 16; }
+  if (actionIndex == 124) { pNewBall->spdX = input; potFlr = -5; potCel = 5; }
+  if (actionIndex == 125) { pNewBall->spdY = input; potFlr = -5; potCel = 5; }
+
+  if (potentiometer) input = map(analogRead(A0), 0, 1024, potFlr, potCel);
 
   if (actionIndex == 21) MakeFrame(display, pauseButton, input);
   else MakeFrame(display, pauseButton, -1);
@@ -146,21 +154,19 @@ void ActionHandler()
   }
   if (actionIndex == 11)
   {
-    if (input == 0) return;
-    if (input == 1) { actionIndex = 111; pNewCircle = new Circle(); AddCircle(pNewCircle); circleCount++; } //adding circle
-    if (input == 2) { actionIndex = 121; pNewBall = new Ball(); AddBall(pNewBall); ballCount++; } //adding ball
-    return;
+    if (input == 1) { actionIndex = 111; pNewCircle = new Circle(); AddCircle(pNewCircle); circleCount++; tm.reset(); tm.setLED(0, 1); tm.setLED(2, 1); input = 0; tm.displayText("cx"); delay(500); return; } //adding circle
+    if (input == 2) { actionIndex = 121; pNewBall = new Ball(); AddBall(pNewBall); ballCount++; tm.reset(); tm.setLED(0, 1); tm.setLED(2, 1); input = 0; tm.displayText("cx"); delay(500); return; } //adding ball
   }
   //circle branch
-  if (actionIndex == 111) { actionIndex = 112; input = 0; return; } //cx
-  if (actionIndex == 112) { actionIndex = 113; input = 0; return; } //cy
-  if (actionIndex == 113) { actionIndex = 114; input = 0; return; } //r
+  if (actionIndex == 111) { actionIndex = 112; tm.reset(); tm.setLED(0, 1); tm.setLED(3, 1); input = 0; tm.displayText("cy"); delay(500); return; } //cx
+  if (actionIndex == 112) { actionIndex = 113; tm.reset(); tm.setLED(0, 1); tm.setLED(4, 1); input = 0; tm.displayText("r"); delay(500); return; } //cy
+  if (actionIndex == 113) { actionIndex = 114; tm.reset(); tm.setLED(0, 1); tm.setLED(5, 1); input = 0; tm.displayText("thick"); delay(500); return; } //r
   if (actionIndex == 114) { actionIndex = -1; } //thickness
   //ball branch
-  if (actionIndex == 121) { actionIndex = 122; input = 0; return; } //cx
-  if (actionIndex == 122) { actionIndex = 123; input = 0; return; } //cy
-  if (actionIndex == 123) { actionIndex = 124; input = 0; return; } //thickness
-  if (actionIndex == 124) { actionIndex = 125; input = 0; return; } //spdX
+  if (actionIndex == 121) { actionIndex = 122; tm.reset(); tm.setLED(0, 1); tm.setLED(3, 1); input = 0; tm.displayText("cy"); delay(500); return; } //cx
+  if (actionIndex == 122) { actionIndex = 123; tm.reset(); tm.setLED(0, 1); tm.setLED(5, 1); input = 0; tm.displayText("thick"); delay(500); return; } //cy
+  if (actionIndex == 123) { actionIndex = 124; tm.reset(); tm.setLED(0, 1); tm.setLED(6, 1); input = 0; tm.displayText("spd.x"); delay(500); return; } //thickness
+  if (actionIndex == 124) { actionIndex = 125; tm.reset(); tm.setLED(0, 1); tm.setLED(7, 1); input = 0; tm.displayText("spd.y"); delay(500); return; } //spdX
   if (actionIndex == 125) { actionIndex = -1; } //spdY
 
 
