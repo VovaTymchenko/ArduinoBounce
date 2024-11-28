@@ -21,8 +21,13 @@ int pauseButton = 0; //button
 
 
 
-Ball* ball2 = new Ball(5, 5, 6, 2.1, 5.3);
-Ball* ball3 = new Ball(15, 5, 14, 2.1, 6.3);
+int actionIndex = -1, input = 0; //used to handle different actions, such as "add circle", "remove ball", "move circle"...
+
+int circleCount = 2, ballCount = 2;
+Circle* circle1 = new Circle();
+Circle* circle2 = new Circle(80, 0, 20, 2);
+Ball* ball1 = new Ball(15, 15, 6, 2.1, 5.3);
+Ball* ball2 = new Ball(105, 45, 14, 2.1, 6.3);
 
 void setup()
 {
@@ -45,8 +50,10 @@ void setup()
 
 
   Serial << endl << "Hello World!" << endl;
+  AddCircle(circle1);
+  AddCircle(circle2);
+  AddBall(ball1);
   AddBall(ball2);
-  AddBall(ball3);
 }
 
 void loop()
@@ -61,12 +68,91 @@ void loop()
   }
 
   tmButtons = tm.readButtons(); // read which buttons are pressed
-  tm.displayIntNum(tmButtons);
-  tm.setLED(0, 1);
+  if (pauseButton == 0 && tmButtons != 0)
+  {
+    tm.displayText("        ");
+
+    if  (tmButtons == 1) // add object to the scene
+    {
+      tm.reset();
+      tm.displayText("add");
+      tm.setLED(0, 1);
+      actionIndex = 1;
+    }
+
+    if  (tmButtons == 2) // remove object from the scene
+    {
+      tm.reset();
+      tm.displayText("remove");
+      tm.setLED(1, 1);
+      actionIndex = 2;
+    }
+
+    if  (tmButtons == 32 && actionIndex != -1) // - button
+    {
+      if (actionIndex == 11) { tm.displayText("circle"); input = 1; }
+      else 
+      {
+        input--;
+        tm.displayIntNum(input);
+        delay(50);
+      }
+    }
+
+    if  (tmButtons == 64 && actionIndex != -1) // + button
+    {
+      if (actionIndex == 11) { tm.displayText("ball"); input = 2; }
+      else 
+      {
+        input++;
+        tm.displayIntNum(input);
+        delay(50);
+      }
+    }
+
+    if  (tmButtons == 128) // apply button
+    {
+      tm.displayText("apply");
+      delay(500);
+      ActionHandler();
+      tm.displayText("        ");
+      delay(500);
+    }
+  }
+  else if (actionIndex == -1) { tm.reset(); }
+  else { tm.displayIntNum(input); }
   
-  MakeFrame(display, pauseButton, tmButtons - 1);
+
+
+  if (actionIndex == 11 || actionIndex == 21) MakeFrame(display, pauseButton, input);
+  else MakeFrame(display, pauseButton, -1);
   display.display();
   display.clearDisplay();
+}
+
+void ActionHandler()
+{
+  if (actionIndex == 1)
+  {
+    actionIndex = 11;
+    return;
+  }
+
+  if (actionIndex == 2)
+  {
+    actionIndex = 21;
+    return;
+  }
+  if (actionIndex == 21)
+  {
+    if (input < 0 || input > (circleCount + ballCount)) return;
+    if (input <= circleCount) RemoveCircle(input);
+    else RemoveBall(input - circleCount);
+    actionIndex = -1;
+  }
+
+  //actionIndex = -1;
+  input = 0;
 }
 
 void ServoSpin(int startAngle, int endAngle, int direction, int speed) //spinDirection should be 1 or -1
