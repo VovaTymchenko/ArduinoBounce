@@ -22,12 +22,16 @@ int pauseButton = 0; //button
 
 
 //used to handle different actions, such as "add circle", "remove ball"...
-int actionIndex = -1, input = 0, potFlr = 0, potCel = 64;
-bool potentiometer = false;
+int actionIndex = -1, input = 0;
+
+int potFlr = 0, potCel = 64; //min and max values for potentiometer mapping
+bool potOn = false;
+
 Circle* pNewCircle; //stores a pointer to a newly created object to manipulate its values
 Ball* pNewBall; //stores a pointer to a newly created object to manipulate its values
+int circleCount = 0, ballCount = 0; //total objects of class in the scene
 
-int circleCount = 0, ballCount = 0;
+
 
 void setup()
 {
@@ -86,7 +90,7 @@ void loop()
 
     if  (tmButtons == 16 && actionIndex != -1) //potentiometer switch
     {
-      potentiometer = !potentiometer;
+      potOn = !potOn;
     }
 
     if  (tmButtons == 32 && actionIndex != -1) // - button
@@ -145,6 +149,8 @@ void loop()
   display.clearDisplay();
 }
 
+
+
 void ActionHandler()
 {
   if (actionIndex == 1) //add object
@@ -187,6 +193,8 @@ void ActionHandler()
   input = 0;
 }
 
+
+
 void ServoSpin(int startAngle, int endAngle, int direction, int speed) //spinDirection should be 1 or -1
 {
   servo.write(startAngle); 
@@ -194,48 +202,3 @@ void ServoSpin(int startAngle, int endAngle, int direction, int speed) //spinDir
   for (int i = startAngle; i * direction <= endAngle; i += direction * speed) servo.write(i);
   delay(500);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-  Circle* circle1 = new Circle();
-
-  Serial << "x " << circle1->cx << endl;
-  Serial << "y " << circle1->cy << endl;
-  Serial << "r " << circle1->r << endl;
-  Serial << "thick " << circle1->thickness << endl;
-
-  Circle* circle2 = new Circle(90, 90, 0, 30);
-
-  vector2d normal(circle1->cx - circle2->cx, circle1->cy - circle2->cy);
-  Serial << "bare " << normal.x << normal.y << endl;
-  Serial << "bare length " << FindLength(normal) << endl;
-  normal = MultScalar(normal, 4);
-  Serial << "multiplied " << normal.x << normal.y << endl;
-  Serial << "multiplied length " << FindLength(normal) << endl;
-  normal = Normalize(normal);
-  Serial << "normalized " << normal.x << normal.y << endl;
-  Serial << "normalized length " << FindLength(normal) << endl;
-
-  vector2d paranormal(12 - circle2->cy, - 31 - circle2->cx);
-  Serial << "dot product " << DotProduct(normal, paranormal) << endl;
-  */

@@ -3,22 +3,10 @@
 #include "MyMath.h"
 
 const int frameH = 64, frameW = 128; //draw surface dimensions - 1
-//int frame[frameH + 1][frameW + 1]; //frame "pixel" data
 bool blink = false; //defines if the edited object should be displayed this frame
 
 std::vector<Circle*> circles; //array of the objects to be displayed
 std::vector<Ball*> balls; //array of the objects to be displayed
-
-/*void DrawFrame(Adafruit_SSD1306 display) //uses the int frame array to pick characters from the symb gradient depending on the number of overlapping objects, then prints the character in console
-{
-	for (int i = 0; i < frameH; i++)
-	{
-		for (int j = 0; j < frameW; j++)
-		{
-      if (frame[i][j] == 1)	display.drawPixel(i, j, SSD1306_WHITE);
-		}
-	}
-}*/
 
 void MakeFrame(Adafruit_SSD1306 &display, int pause, int edit) //runs through the matrix of y rows and x cols, checking if any of the objects should be displayed at the given coordinates. Uses an increment to determine how many objects overlap at a single coordinate
 {
@@ -26,7 +14,6 @@ void MakeFrame(Adafruit_SSD1306 &display, int pause, int edit) //runs through th
 	{
 		for (int j = 1; j < frameW; j++)
 		{
-			//frame[i][j] = 0;
 			for (int k = 0; k < circles.size(); k++) //circles
 			{
         if (k == edit && blink) continue;

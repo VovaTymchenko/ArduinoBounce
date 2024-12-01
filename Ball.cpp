@@ -152,8 +152,3 @@ void Ball::Bounce(const std::vector<Circle*>& circles, const std::vector<Ball*>&
 		}
 	}
 }
-
-void Ball::Split() //TBD
-{
-	//sounds fun, but i gotta do the main batch first
-}
