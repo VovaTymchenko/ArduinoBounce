@@ -58,14 +58,7 @@ void setup()
 
 void loop()
 {
-  if (digitalRead(D4) == 0)
-  {
-    tone(D8, 466.16, 100);
-    pauseButton = abs(pauseButton - 1);
-    if (pauseButton) ServoSpin(180, 0, -1, 3);
-    else ServoSpin(0, 180, 1, 3);
-    tone(D8, 466.16, 100);
-  }
+  if (digitalRead(D4) == 0) Pause();
 
   tmButtons = tm.readButtons(); //read which buttons are pressed
   if (pauseButton == 0 && tmButtons != 0)
@@ -141,7 +134,7 @@ void loop()
   if (actionIndex == 124) { pNewBall->spdX = input; potFlr = -5; potCel = 5; }
   if (actionIndex == 125) { pNewBall->spdY = input; potFlr = -5; potCel = 5; }
 
-  if (potentiometer) input = map(analogRead(A0), 0, 1024, potFlr, potCel);
+  if (potOn) input = map(analogRead(A0), 0, 1024, potFlr, potCel);
 
   if (actionIndex == 21) MakeFrame(display, pauseButton, input);
   else MakeFrame(display, pauseButton, -1);
@@ -153,6 +146,8 @@ void loop()
 
 void ActionHandler()
 {
+  tm.reset();
+
   if (actionIndex == 1) //add object
   {
     actionIndex = 11;
@@ -160,19 +155,19 @@ void ActionHandler()
   }
   if (actionIndex == 11)
   {
-    if (input == 1) { actionIndex = 111; pNewCircle = new Circle(); AddCircle(pNewCircle); circleCount++; tm.reset(); tm.setLED(0, 1); tm.setLED(2, 1); input = 0; tm.displayText("cx"); delay(500); return; } //adding circle
-    if (input == 2) { actionIndex = 121; pNewBall = new Ball(); AddBall(pNewBall); ballCount++; tm.reset(); tm.setLED(0, 1); tm.setLED(2, 1); input = 0; tm.displayText("cx"); delay(500); return; } //adding ball
+    if (input == 1) { actionIndex = 111; pNewCircle = new Circle(); AddCircle(pNewCircle); circleCount++; tm.setLED(0, 1); tm.setLED(2, 1); input = 0; tm.displayText("cx"); delay(500); return; } //adding circle
+    if (input == 2) { actionIndex = 121; pNewBall = new Ball(); AddBall(pNewBall); ballCount++; tm.setLED(0, 1); tm.setLED(2, 1); input = 0; tm.displayText("cx"); delay(500); return; } //adding ball
   }
   //circle branch
-  if (actionIndex == 111) { actionIndex = 112; tm.reset(); tm.setLED(0, 1); tm.setLED(3, 1); input = 0; tm.displayText("cy"); delay(500); return; } //cx
-  if (actionIndex == 112) { actionIndex = 113; tm.reset(); tm.setLED(0, 1); tm.setLED(4, 1); input = 0; tm.displayText("r"); delay(500); return; } //cy
-  if (actionIndex == 113) { actionIndex = 114; tm.reset(); tm.setLED(0, 1); tm.setLED(5, 1); input = 0; tm.displayText("thick"); delay(500); return; } //r
+  if (actionIndex == 111) { actionIndex = 112; tm.setLED(0, 1); tm.setLED(3, 1); input = 0; tm.displayText("cy"); delay(500); return; } //cx
+  if (actionIndex == 112) { actionIndex = 113; tm.setLED(0, 1); tm.setLED(4, 1); input = 0; tm.displayText("r"); delay(500); return; } //cy
+  if (actionIndex == 113) { actionIndex = 114; tm.setLED(0, 1); tm.setLED(5, 1); input = 0; tm.displayText("thick"); delay(500); return; } //r
   if (actionIndex == 114) { actionIndex = -1; } //thickness
   //ball branch
-  if (actionIndex == 121) { actionIndex = 122; tm.reset(); tm.setLED(0, 1); tm.setLED(3, 1); input = 0; tm.displayText("cy"); delay(500); return; } //cx
-  if (actionIndex == 122) { actionIndex = 123; tm.reset(); tm.setLED(0, 1); tm.setLED(5, 1); input = 0; tm.displayText("thick"); delay(500); return; } //cy
-  if (actionIndex == 123) { actionIndex = 124; tm.reset(); tm.setLED(0, 1); tm.setLED(6, 1); input = 0; tm.displayText("spd.x"); delay(500); return; } //thickness
-  if (actionIndex == 124) { actionIndex = 125; tm.reset(); tm.setLED(0, 1); tm.setLED(7, 1); input = 0; tm.displayText("spd.y"); delay(500); return; } //spdX
+  if (actionIndex == 121) { actionIndex = 122; tm.setLED(0, 1); tm.setLED(3, 1); input = 0; tm.displayText("cy"); delay(500); return; } //cx
+  if (actionIndex == 122) { actionIndex = 123; tm.setLED(0, 1); tm.setLED(5, 1); input = 0; tm.displayText("thick"); delay(500); return; } //cy
+  if (actionIndex == 123) { actionIndex = 124; tm.setLED(0, 1); tm.setLED(6, 1); input = 0; tm.displayText("spd.x"); delay(500); return; } //thickness
+  if (actionIndex == 124) { actionIndex = 125; tm.setLED(0, 1); tm.setLED(7, 1); input = 0; tm.displayText("spd.y"); delay(500); return; } //spdX
   if (actionIndex == 125) { actionIndex = -1; } //spdY
 
 
@@ -184,16 +179,21 @@ void ActionHandler()
   }
   if (actionIndex == 21)
   {
-    if (input < 0 || input > (circleCount + ballCount)) return;
+    if (input < 0 || input >= (circleCount + ballCount)) return;
     if (input <= circleCount) { RemoveCircle(input); circleCount--; }
     else { RemoveBall(input - circleCount); ballCount--;}
     actionIndex = -1;
   }
-
-  input = 0;
 }
 
-
+void Pause() //freezes all scene object in place
+{
+  tone(D8, 466.16, 100);
+  pauseButton = abs(pauseButton - 1);
+  if (pauseButton) ServoSpin(180, 0, -1, 3);
+  else ServoSpin(0, 180, 1, 3);
+  tone(D8, 466.16, 100);
+}
 
 void ServoSpin(int startAngle, int endAngle, int direction, int speed) //spinDirection should be 1 or -1
 {
