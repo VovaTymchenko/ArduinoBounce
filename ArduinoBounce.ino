@@ -117,10 +117,8 @@ void loop()
       delay(500);
     }
   }
-  else if (actionIndex == -1) { tm.reset(); }
   else { tm.displayIntNum(input); }
   
-  //this part looks quite ugly, but i don't think there are any good solutions for a project of such scale
   //created object manipulation
   //circle
   if (actionIndex == 111) { pNewCircle->cx = input; potFlr = -32; potCel = 160; }
@@ -184,6 +182,8 @@ void ActionHandler()
     else { RemoveBall(input - circleCount); ballCount--;}
     actionIndex = -1;
   }
+
+  if (actionIndex == -1) tm.reset();
 }
 
 void Pause() //freezes all scene object in place
