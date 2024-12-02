@@ -159,44 +159,74 @@ void ActionHandler()
 {
   tm.reset();
 
-  if (actionIndex == 1) //add object
+  switch (actionIndex)
   {
-    actionIndex = 11;
-    return;
-  }
-  if (actionIndex == 11)
-  {
-    if (input == 1) { actionIndex = 111; pNewCircle = new Circle(); AddCircle(pNewCircle); circleCount++; tm.setLED(0, 1); tm.setLED(2, 1); tm.displayText("cx"); delay(500); return; } //adding circle
-    if (input == 2) { actionIndex = 121; pNewBall = new Ball(); AddBall(pNewBall); ballCount++; tm.setLED(0, 1); tm.setLED(2, 1); tm.displayText("cx"); delay(500); return; } //adding ball
-  }
-  //circle branch
-  if (actionIndex == 111) { actionIndex = 112; tm.setLED(0, 1); tm.setLED(3, 1); tm.displayText("cy"); delay(500); return; } //cx
-  if (actionIndex == 112) { actionIndex = 113; tm.setLED(0, 1); tm.setLED(4, 1); tm.displayText("r"); delay(500); return; } //cy
-  if (actionIndex == 113) { actionIndex = 114; tm.setLED(0, 1); tm.setLED(5, 1); tm.displayText("thick"); delay(500); return; } //r
-  if (actionIndex == 114) { actionIndex = -1; } //thickness
-  //ball branch
-  if (actionIndex == 121) { actionIndex = 122; tm.setLED(0, 1); tm.setLED(3, 1); tm.displayText("cy"); delay(500); return; } //cx
-  if (actionIndex == 122) { actionIndex = 123; tm.setLED(0, 1); tm.setLED(5, 1); tm.displayText("thick"); delay(500); return; } //cy
-  if (actionIndex == 123) { actionIndex = 124; tm.setLED(0, 1); tm.setLED(6, 1); tm.displayText("spd.x"); delay(500); return; } //thickness
-  if (actionIndex == 124) { actionIndex = 125; tm.setLED(0, 1); tm.setLED(7, 1); tm.displayText("spd.y"); delay(500); return; } //spdX
-  if (actionIndex == 125) { actionIndex = -1; } //spdY
+    case 1:
+      actionIndex = 11;
+      tm.setLED(0, 1);
+      break;
+
+    case 11:
+      if (input == 1) { actionIndex = 111; pNewCircle = new Circle(); AddCircle(pNewCircle); circleCount++; tm.setLED(0, 1); tm.setLED(2, 1); tm.displayText("cx"); delay(500); } //adding circle
+      if (input == 2) { actionIndex = 121; pNewBall = new Ball(); AddBall(pNewBall); ballCount++; tm.setLED(0, 1); tm.setLED(2, 1); tm.displayText("cx"); delay(500); } //adding ball
+      break;
 
 
 
-  if (actionIndex == 2) //remove object
-  {
-    actionIndex = 21;
-    return;
-  }
-  if (actionIndex == 21)
-  {
-    if (input < 0 || input >= (circleCount + ballCount)) return;
-    if (input < circleCount) { RemoveCircle(input); circleCount--; }
-    else { RemoveBall(input - circleCount); ballCount--;}
-    actionIndex = -1;
+    case 111:
+      actionIndex = 112; tm.setLED(0, 1); tm.setLED(3, 1); tm.displayText("cy"); delay(500); //apply cx
+      break;
+
+    case 112:
+      actionIndex = 113; tm.setLED(0, 1); tm.setLED(4, 1); tm.displayText("r"); delay(500); //apply cy
+      break;
+
+    case 113:
+      actionIndex = 114; tm.setLED(0, 1); tm.setLED(5, 1); tm.displayText("thick"); delay(500); //apply r
+      break;
+
+    case 114:
+      actionIndex = -1; //apply thickness
+      break;
+
+
+
+    case 121:
+      actionIndex = 122; tm.setLED(0, 1); tm.setLED(3, 1); tm.displayText("cy"); delay(500); //apply cx
+      break;
+
+    case 122:
+      actionIndex = 123; tm.setLED(0, 1); tm.setLED(5, 1); tm.displayText("thick"); delay(500); //apply cy
+      break;
+
+    case 123:
+      actionIndex = 124; tm.setLED(0, 1); tm.setLED(6, 1); tm.displayText("spd.x"); delay(500); //apply thickness
+      break;
+
+    case 124:
+      actionIndex = 125; tm.setLED(0, 1); tm.setLED(7, 1); tm.displayText("spd.y"); delay(500); //apply spdX
+      break;
+
+    case 125:
+      actionIndex = -1; //apply spdY
+      break;
+
+
+
+    case 2:
+      actionIndex = 21;
+      break;
+
+    case 21:
+      if (input < 0 || input >= (circleCount + ballCount)) return; //invalid object index
+      if (input < circleCount) { RemoveCircle(input); circleCount--; } //index points to a circle - remove circle
+      else { RemoveBall(input - circleCount); ballCount--;} //index points to a ball - remove ball
+      actionIndex = -1;
+      break;
   }
 
-  if (actionIndex == -1) tm.reset();
+  if (actionIndex == -1) { potOn = false; tm.reset(); }
+
   input = 0;
 }
 
